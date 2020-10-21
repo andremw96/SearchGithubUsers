@@ -1,4 +1,4 @@
-package com.andreamw96.andreamettawijaya.datasource.network
+package com.andreamw96.andreamettawijaya.datasource.network.user
 
 
 import com.google.gson.annotations.SerializedName

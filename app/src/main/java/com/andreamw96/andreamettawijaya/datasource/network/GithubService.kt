@@ -1,5 +1,6 @@
 package com.andreamw96.andreamettawijaya.datasource.network
 
+import com.andreamw96.andreamettawijaya.datasource.network.user.GithubSearchResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

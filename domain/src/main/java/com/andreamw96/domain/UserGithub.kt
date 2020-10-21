@@ -15,6 +15,7 @@ data class UserGithub(
     val organizationsUrl: String,
     val receivedEventsUrl: String,
     val reposUrl: String,
+    val score: Int,
     val siteAdmin: Boolean,
     val starredUrl: String,
     val subscriptionsUrl: String,

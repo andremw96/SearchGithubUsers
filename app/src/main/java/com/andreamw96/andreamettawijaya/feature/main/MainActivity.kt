@@ -24,8 +24,8 @@ class MainActivity : DaggerAppCompatActivity() {
         mainViewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
         mainViewModel.getUsersByName()
         mainViewModel.userData.observe(this, Observer {
-            for (i in it.indices) {
-                Log.d("response", it[i].login)
+            for (element in it) {
+                Log.d("response", element.login)
             }
         })
     }

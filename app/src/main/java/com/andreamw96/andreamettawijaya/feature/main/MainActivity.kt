@@ -4,8 +4,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +12,7 @@ import com.andreamw96.andreamettawijaya.R
 import com.andreamw96.andreamettawijaya.di.viewmodel.ViewModelProvidersFactory
 import com.andreamw96.andreamettawijaya.utils.EndlessRecyclerViewScrollListener
 import com.andreamw96.andreamettawijaya.utils.isConnectInternet
+import com.andreamw96.andreamettawijaya.utils.showSnackBarWithAction
 import com.andreamw96.andreamettawijaya.utils.toPresentationModel
 import com.andreamw96.usecases.base.Resource
 import dagger.android.support.DaggerAppCompatActivity
@@ -42,9 +41,11 @@ class MainActivity : DaggerAppCompatActivity() {
         rv_list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutMnager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
                 if (isConnectInternet(this@MainActivity)) {
-                    //mainViewModel.getSameUserNextPage(page+1)
+                    mainViewModel.setPage(page+1)
                 } else {
-                    Toast.makeText(this@MainActivity, "No Internet Connection", Toast.LENGTH_LONG).show()
+                    showSnackBarWithAction(mainLayout, getString(R.string.no_internet), getString(R.string.retry)) {
+                        mainViewModel.retryplus()
+                    }
                 }
             }
         })
@@ -62,15 +63,15 @@ class MainActivity : DaggerAppCompatActivity() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-               // mainViewModel.getUsersByName(query, initialPage)
                 mainViewModel.setQuery(query)
+                mainViewModel.setPage(1)
+                mainViewModel.setQueryChanged()
                 searchView.clearFocus()
 
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-
                 return true
             }
         })
@@ -81,7 +82,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun observeMainViewModel() {
         mainViewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
-        mainViewModel.getData.observe(this, Observer { resource ->
+        mainViewModel.searchGithubUsers.observe(this, Observer { resource ->
             if (resource != null) {
                 when (resource.status) {
                     Resource.Status.LOADING -> {
@@ -89,48 +90,24 @@ class MainActivity : DaggerAppCompatActivity() {
                     }
                     Resource.Status.SUCCESS -> {
                         progress_bar.hide()
-                        resource.data?.map {
-                            it.toPresentationModel()
-                        }?.let { adapter.bindData(it) }
+                        if (!resource.data.isNullOrEmpty()) {
+                            adapter.bindData(resource.data?.toPresentationModel()!!)
+                        }
                     }
                     Resource.Status.ERROR -> {
                         progress_bar.hide()
-                        data_no_found.visibility = View.VISIBLE
+                        showSnackBarWithAction(mainLayout, resource.message.toString(), getString(R.string.retry)) {
+                            mainViewModel.retry()
+                        }
                     }
                 }
             }
-        })
-       /* mainViewModel.userData.observe(this, Observer {
-            if (it.isNullOrEmpty()) {
-                data_no_found.visibility = View.VISIBLE
-                adapter.clearData()
-            } else {
-                data_no_found.visibility = View.GONE
-                adapter.bindData(it)
-            }
-        })
-
-        mainViewModel.isLoading.observe(this, Observer { isLoading ->
-            if (isLoading) {
-                progress_bar.show()
-            } else {
-                progress_bar.hide()
-            }
-        })
-
-        mainViewModel.errorData.observe(this, Observer { errorMessage ->
-            if (errorMessage != null) {
-                data_no_found.visibility = View.VISIBLE
-            } else {
-                data_no_found.visibility = View.GONE
-            }
-            adapter.clearData()
         })
 
         mainViewModel.queryChanged.observe(this, Observer { queryChanged ->
             if (queryChanged) {
                 adapter.clearData()
             }
-        })*/
+        })
     }
 }

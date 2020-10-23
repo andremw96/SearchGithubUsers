@@ -50,3 +50,9 @@ fun UserGithub.toPresentationModel() : GithubUserResponse {
         this.url
     )
 }
+
+fun List<UserGithub>.toPresentationModel() : List<GithubUserResponse> {
+    return this.map {
+        it.toPresentationModel()
+    }
+}

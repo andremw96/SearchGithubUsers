@@ -1,4 +1,4 @@
-package com.andreamw96.usecases
+package com.andreamw96.usecases.base
 
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers

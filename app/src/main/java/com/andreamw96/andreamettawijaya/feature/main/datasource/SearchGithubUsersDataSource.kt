@@ -11,17 +11,6 @@ class SearchGithubUsersDataSource @Inject constructor(
     private val githubService: GithubService
 ) : UserGithubDataSource {
 
-    override fun getGithubUsers(
-        sinceId: Int,
-        perPage: Int
-    ): Flowable<List<UserGithub>> {
-        return githubService.getGithubUsers(sinceId, perPage).map {
-            it.items.map { userResp ->
-                userResp.toDomainModel()
-            }
-        }
-    }
-
     override fun getGithubUsersByName(
         name: String,
         page: Int

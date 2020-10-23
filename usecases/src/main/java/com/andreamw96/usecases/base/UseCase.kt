@@ -1,4 +1,4 @@
-package com.andreamw96.usecases
+package com.andreamw96.usecases.base
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

@@ -1,4 +1,4 @@
-package com.andreamw96.andreamettawijaya.feature.main.datasource
+package com.andreamw96.andreamettawijaya.feature.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,25 +9,21 @@ import javax.inject.Inject
 
 open class MainViewModel @Inject constructor(private val getGithubUsersByNameUseCase: GetGithubUsersByNameUseCase) :
     ViewModel() {
-    private var _page = MutableLiveData<Int>()
 
-    fun setPage(page: Int) {
-        if (_page.value != page) {
-            _page.value = page
-        }
-    }
-
+    val isLoading = MutableLiveData<Boolean>()
     val userData = MutableLiveData<List<GithubUserResponse>>()
+    val errorData = MutableLiveData<String>()
 
-    fun getUsersByName() {
+    fun getUsersByName(name: String, page: Int) {
+        isLoading.postValue(true)
         getGithubUsersByNameUseCase.execute({
             userData.postValue(it.map {userDomain->
                 userDomain.toPresentationModel()
             })
         }, {
-
+            errorData.postValue(it.message)
         }, {
-
-        }, GetGithubUsersByNameUseCase.Params("pikachu", 1))
+            isLoading.postValue(false)
+        }, GetGithubUsersByNameUseCase.Params(name, page))
     }
 }

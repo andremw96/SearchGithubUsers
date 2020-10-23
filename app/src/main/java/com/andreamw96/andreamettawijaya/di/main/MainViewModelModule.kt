@@ -2,7 +2,7 @@ package com.andreamw96.andreamettawijaya.di.main
 
 import androidx.lifecycle.ViewModel
 import com.andreamw96.andreamettawijaya.di.viewmodel.ViewModelKey
-import com.andreamw96.andreamettawijaya.feature.main.datasource.MainViewModel
+import com.andreamw96.andreamettawijaya.feature.main.MainViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

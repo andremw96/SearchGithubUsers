@@ -2,6 +2,7 @@ package com.andreamw96.usecases
 
 import com.andreamw96.data.UserRepository
 import com.andreamw96.domain.UserGithub
+import com.andreamw96.usecases.base.FlowableUseCase
 import io.reactivex.Flowable
 
 class GetGithubUsersByNameUseCase(private val userRepository: UserRepository) :

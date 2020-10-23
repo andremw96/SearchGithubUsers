@@ -16,8 +16,12 @@ class MainAdapter(private val ctx: Context) : RecyclerView.Adapter<MainAdapter.L
     var listUser = mutableListOf<GithubUserResponse>()
 
     fun bindData(users: List<GithubUserResponse>) {
-        listUser.clear()
         listUser.addAll(users)
+        notifyDataSetChanged()
+    }
+
+    fun clearData() {
+        listUser.clear()
         notifyDataSetChanged()
     }
 
